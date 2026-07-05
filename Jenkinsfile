@@ -1,33 +1,51 @@
 pipeline {
+
     agent any
 
+    tools {
+        maven 'Maven3'
+        jdk 'JDK17'
+    }
+
     stages {
-        stage('Clone Code') {
+
+        stage('Checkout') {
             steps {
-                echo 'Pulling the latest codebase from GitHub...'
+                echo 'Checking out source code'
             }
         }
 
-        stage('Compile & Test') {
+        stage('Build') {
             steps {
-                echo 'Running compilation and JaCoCo test reporting passes...'
-                // Runs your unit tests cleanly inside the automation container
-                bat 'mvn clean verify'
+                bat 'mvn clean compile'
             }
         }
 
-        stage('SonarQube Static Analysis') {
+        stage('Test') {
             steps {
-                echo 'Injecting telemetry matrices to the SonarQube local engine...'
-                bat "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=http://127.0.0.1:9000 -Dsonar.token=sqp_0d6fe0865e88927e21233da860d5bb1dc1e0030"
+                bat 'mvn test'
             }
         }
 
-        stage('Deploy to Nexus') {
+        stage('Package') {
             steps {
-                echo 'Pushing the compiled artifact to the Nexus Release vault...'
-                bat 'mvn deploy -DskipTests'
+                bat 'mvn package'
             }
+        }
+
+    }
+
+    post {
+        always {
+            echo 'Pipeline Finished'
+        }
+
+        success {
+            echo 'Build Successful'
+        }
+
+        failure {
+            echo 'Build Failed'
         }
     }
 }
