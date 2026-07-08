@@ -10,7 +10,7 @@ pipeline {
 
     // Step 6: Using Environment Variables
     environment {
-        APP_NAME = 'StudentManagement'
+        APP_NAME = 'Student-Management'
         BUILD_ENV = 'Development'
     }
 
