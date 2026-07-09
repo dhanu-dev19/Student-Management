@@ -64,11 +64,12 @@ pipeline {
 
         // Optional Bonus Stage: Keeps your Nexus deployment active
         stage('Deploy to Nexus') {
-            steps {
-                echo 'Pushing final compiled release artifact to Sonatype Nexus...'
-                bat 'mvn deploy -DskipTests'
-            }
-        }
+                    steps {
+                        echo 'Pushing final compiled release artifact to Sonatype Nexus...'
+                        // The "-s" flag explicitly forces Maven to use your authenticated settings file
+                        bat 'mvn deploy -s "C:\\Users\\Dhanush\\.m2\\settings.xml" -DskipTests'
+                    }
+              }
     }
 
     // Post-Build Condition blocks (Steps 3, 4, and 7 combined)
