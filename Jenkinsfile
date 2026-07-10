@@ -47,13 +47,12 @@ pipeline {
 
         // Step 5: Add SonarQube Analysis Stage
         stage('SonarQube Analysis') {
-            steps {
-                echo 'Injecting code matrix rules to the SonarQube engine...'
-                // If you haven't named your server 'LocalSonar' in Jenkins System Settings yet,
-                // you can keep using the explicit inline command we used before:
-                bat "mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=http://127.0.0.1:9000 -Dsonar.token=sqa_efd4a9769010ca79e3e63c696bb4bf36622689cc"
-            }
-        }
+                   steps {
+                       withSonarQubeEnv('LocalSonar') {
+                           bat 'mvn sonar:sonar'
+                       }
+                   }
+               }
 
         stage('Quality Gate') {
                     steps {
